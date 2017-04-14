@@ -1,13 +1,18 @@
-# babel-plugin-dynamic-import-node
+# babel-plugin-dynamic-import-node-sync
 
 Babel plugin to transpile `import()` to a deferred `require()`, for node. Matches the [proposed spec](https://github.com/domenic/proposal-import-function).
 
 **NOTE:** Babylon >= v6.12.0 is required to correct parse dynamic imports.
 
+## Difference from babel-plugin-dynamic-import-node
+
+**babel-plugin-dynamic-import-node-sync** import(SOURCE) => require(SOURCE)
+**babel-plugin-dynamic-import-node** import(SOURCE) => Promise.resolve().then(() => require(SOURCE))
+
 ## Installation
 
 ```sh
-$ npm install babel-plugin-dynamic-import-node --save-dev
+$ npm install babel-plugin-dynamic-import-node-sync --save-dev
 ```
 
 ## Usage
@@ -18,20 +23,20 @@ $ npm install babel-plugin-dynamic-import-node --save-dev
 
 ```json
 {
-  "plugins": ["dynamic-import-node"]
+  "plugins": ["dynamic-import-node-sync"]
 }
 ```
 
 ### Via CLI
 
 ```sh
-$ babel --plugins dynamic-import-node script.js
+$ babel --plugins dynamic-import-node-sync script.js
 ```
 
 ### Via Node API
 
 ```javascript
 require('babel-core').transform('code', {
-  plugins: ['dynamic-import-node']
+  plugins: ['dynamic-import-node-sync']
 });
 ```
