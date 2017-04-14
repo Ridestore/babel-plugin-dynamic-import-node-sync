@@ -1,7 +1,7 @@
 {
-  "name": "babel-plugin-dynamic-import-node",
+  "name": "babel-plugin-dynamic-import-node-sync",
   "version": "1.0.1",
-  "description": "Babel plugin to transpile import() to a deferred require(), for node",
+  "description": "Babel plugin to transpile import() to a require(), for node",
   "main": "lib/index.js",
   "directories": {
     "test": "test"
