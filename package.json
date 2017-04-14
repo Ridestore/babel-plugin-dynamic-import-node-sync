@@ -24,21 +24,24 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/airbnb/babel-plugin-dynamic-import-node.git"
+    "url": "git+https://github.com/seeden/babel-plugin-dynamic-import-node-sync.git"
   },
   "keywords": [
     "babel",
     "plugin",
     "dynamic",
     "import",
-    "node"
+    "node",
+    "sync",
+    "ssr",
+    "react-router"
   ],
-  "author": "Jordan Gensler <jordan.gensler@airbnb.com>",
+  "author": "Zlatko Fedor <zlatkofedor@cherryprojects.com>",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/airbnb/babel-plugin-dynamic-import-node/issues"
+    "url": "https://github.com/seeden/babel-plugin-dynamic-import-node-sync/issues"
   },
-  "homepage": "https://github.com/airbnb/babel-plugin-dynamic-import-node#readme",
+  "homepage": "https://github.com/seeden/babel-plugin-dynamic-import-node-sync#readme",
   "devDependencies": {
     "airbnb-js-shims": "^1.1.1",
     "babel-cli": "^6.24.0",

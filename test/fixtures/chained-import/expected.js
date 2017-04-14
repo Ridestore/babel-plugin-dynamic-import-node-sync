@@ -1,3 +1,3 @@
-Promise.resolve().then(() => require('test-module')).then(() => Promise.resolve().then(() => require('test-module-2')));
+require('test-module').then(() => require('test-module-2'));
 
-Promise.all([Promise.resolve().then(() => require('test-1')), Promise.resolve().then(() => require('test-2')), Promise.resolve().then(() => require('test-3'))]).then(() => {});
+Promise.all([require('test-1'), require('test-2'), require('test-3')]).then(() => {});

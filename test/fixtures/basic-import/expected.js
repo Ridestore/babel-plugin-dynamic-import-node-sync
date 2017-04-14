@@ -1,1 +1,1 @@
-const testModule = Promise.resolve().then(() => require('test-module'));
+const testModule = require('test-module');

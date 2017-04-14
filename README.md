@@ -4,14 +4,16 @@ Babel plugin to transpile `import()` to a `require()`, for node. Matches the [pr
 
 **NOTE:** Babylon >= v6.12.0 is required to correct parse dynamic imports.
 
+I am using it for server-side rendering.
+
 ## Difference from babel-plugin-dynamic-import-node
 
-**babel-plugin-dynamic-import-node-sync** 
+**babel-plugin-dynamic-import-node-sync**
 ```
 import(SOURCE) => require(SOURCE)
 ```
 
-**babel-plugin-dynamic-import-node** 
+**babel-plugin-dynamic-import-node**
 ```
 import(SOURCE) => Promise.resolve().then(() => require(SOURCE))
 ```
