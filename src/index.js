@@ -1,27 +1,31 @@
-import template from 'babel-template';
-import syntax from 'babel-plugin-syntax-dynamic-import';
-import * as t from 'babel-types';
+import syntax from '@babel/plugin-syntax-dynamic-import';
 
-const TYPE_IMPORT = 'Import';
+export default function ({ template, types: t }) {
+  const buildImport = template(`
+    require(SOURCE)
+  `);
 
-const buildImport = template(`
-  require(SOURCE)
-`);
+  return {
+    inherits: syntax,
 
-export default () => ({
-  inherits: syntax,
-
-  visitor: {
-    CallExpression(path) {
-      if (path.node.callee.type === TYPE_IMPORT) {
-        const importArgument = path.node.arguments[0];
+    visitor: {
+      Import(path) {
+        const importArguments = path.parentPath.node.arguments;
+        const isString = t.isStringLiteral(importArguments[0])
+                        || t.isTemplateLiteral(importArguments[0]);
+        if (isString) {
+          t.removeComments(importArguments[0]);
+        }
         const newImport = buildImport({
-          SOURCE: (t.isStringLiteral(importArgument) || t.isTemplateLiteral(importArgument))
-            ? path.node.arguments
-            : t.templateLiteral([t.templateElement({ raw: '' }), t.templateElement({ raw: '' }, true)], path.node.arguments),
+          SOURCE: (isString)
+            ? importArguments
+            : t.templateLiteral([
+              t.templateElement({ raw: '', cooked: '' }),
+              t.templateElement({ raw: '', cooked: '' }, true),
+            ], importArguments),
         });
-        path.replaceWith(newImport);
-      }
+        path.parentPath.replaceWith(newImport);
+      },
     },
-  },
-});
+  };
+}
