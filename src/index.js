@@ -8,23 +8,29 @@ const buildImport = template(`
   const r = require(SOURCE);r.then = cb => cb(r);return r;
 `);
 
+const build = (path, argument) => path.replaceWithMultiple(buildImport({
+  SOURCE: (t.isStringLiteral(argument) || t.isTemplateLiteral(argument))
+      ? path.node.arguments
+      : t.templateLiteral([t.templateElement({ raw: '' }), t.templateElement({ raw: '' }, true)], path.node.arguments),
+}));
+
 export default () => ({
   inherits: syntax,
   visitor: {
-    CallExpression(path) {
+    // eslint-disable-next-line consistent-return
+    CallExpression(path, { opts }) {
       if (path.node.callee.type === TYPE_IMPORT) {
         const importArgument = path.node.arguments[0];
-        const [, syncComment] = importArgument.leadingComments;
 
-        if (!syncComment || !syncComment.value || !(syncComment.value.trim().toLowerCase() === 'sync')) {
-          return;
+        if (opts && !opts.target) {
+          return build(path, importArgument);
         }
 
-        path.replaceWithMultiple(buildImport({
-          SOURCE: (t.isStringLiteral(importArgument) || t.isTemplateLiteral(importArgument))
-            ? path.node.arguments
-            : t.templateLiteral([t.templateElement({ raw: '' }), t.templateElement({ raw: '' }, true)], path.node.arguments),
-        }));
+        (importArgument.leadingComments || [])
+          // eslint-disable-next-line max-len
+          .filter(comment => comment && comment.value && comment.value.trim().toLowerCase() === opts.target)
+          .slice(0, 1)
+          .forEach(() => build(path, importArgument));
       }
     },
   },
