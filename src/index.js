@@ -14,7 +14,7 @@ export default () => ({
     CallExpression(path) {
       if (path.node.callee.type === TYPE_IMPORT) {
         const importArgument = path.node.arguments[0];
-        const syncComment = importArgument[1];
+        const [, syncComment] = importArgument.leadingComments;
 
         if (!syncComment || !syncComment.value || !(syncComment.value.trim().toLowerCase() === 'sync')) {
           return;
