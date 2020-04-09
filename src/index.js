@@ -1,31 +1,31 @@
-import syntax from '@babel/plugin-syntax-dynamic-import';
+import template from 'babel-template';
+import syntax from 'babel-plugin-syntax-dynamic-import';
+import * as t from 'babel-types';
 
-export default function ({ template, types: t }) {
-  const buildImport = template(`
-    require(SOURCE)
-  `);
+const TYPE_IMPORT = 'Import';
 
-  return {
-    inherits: syntax,
+const buildImport = template(`
+  const r = require(SOURCE);r.then = cb => cb(r);return r;
+`);
 
-    visitor: {
-      Import(path) {
-        const importArguments = path.parentPath.node.arguments;
-        const isString = t.isStringLiteral(importArguments[0])
-                        || t.isTemplateLiteral(importArguments[0]);
-        if (isString) {
-          t.removeComments(importArguments[0]);
+export default () => ({
+  inherits: syntax,
+  visitor: {
+    CallExpression(path) {
+      if (path.node.callee.type === TYPE_IMPORT) {
+        const importArgument = path.node.arguments[0];
+        const [, syncComment] = importArgument;
+
+        if (!syncComment || !syncComment.value || !(syncComment.value.trim().toLowerCase() === 'sync')) {
+          return;
         }
-        const newImport = buildImport({
-          SOURCE: (isString)
-            ? importArguments
-            : t.templateLiteral([
-              t.templateElement({ raw: '', cooked: '' }),
-              t.templateElement({ raw: '', cooked: '' }, true),
-            ], importArguments),
-        });
-        path.parentPath.replaceWith(newImport);
-      },
+
+        path.replaceWithMultiple(buildImport({
+          SOURCE: (t.isStringLiteral(importArgument) || t.isTemplateLiteral(importArgument))
+            ? path.node.arguments
+            : t.templateLiteral([t.templateElement({ raw: '' }), t.templateElement({ raw: '' }, true)], path.node.arguments),
+        }));
+      }
     },
-  };
-}
+  },
+});

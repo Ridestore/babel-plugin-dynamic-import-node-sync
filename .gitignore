@@ -43,3 +43,5 @@ lib/
 yarn.lock
 package-lock.json
 npm-shrinkwrap.json
+
+.idea
