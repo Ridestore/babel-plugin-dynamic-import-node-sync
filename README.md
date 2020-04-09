@@ -8,7 +8,7 @@ I am using it for server-side rendering.
 
 **babel-plugin-dynamic-import-node-sync**
 ```
-import(SOURCE) => require(SOURCE)
+import(SOURCE) => () => { const r=require(SOURCE);r.then(cb=>cb(r));return r; }()
 ```
 
 **babel-plugin-dynamic-import-node**
@@ -19,7 +19,7 @@ import(SOURCE) => Promise.resolve().then(() => require(SOURCE))
 ## Installation
 
 ```sh
-$ npm install babel-plugin-dynamic-import-node-sync --save-dev
+$ npm install @ridestore/babel-plugin-dynamic-import-node-sync --save-dev
 ```
 
 ## Usage
@@ -30,12 +30,6 @@ $ npm install babel-plugin-dynamic-import-node-sync --save-dev
 
 ```json
 {
-  "plugins": ["dynamic-import-node-sync"]
+  "plugins": ["@ridestore/babel-plugin-dynamic-import-node-sync"]
 }
-```
-
-### Via CLI
-
-```sh
-$ babel --plugins dynamic-import-node-sync script.js
 ```
