@@ -30,6 +30,31 @@ $ npm install @ridestore/babel-plugin-dynamic-import-node-sync --save-dev
 
 ```json
 {
-  "plugins": ["@ridestore/babel-plugin-dynamic-import-node-sync"]
+  "plugins": [
+    ["@ridestore/babel-plugin-dynamic-import-node-sync", { "target": "sync" }]
+  ]
 }
 ```
+
+
+## Options
+
+### opts.target
+
+Script is looking for ```import()``` with comment provided in ``target`` field, example:
+
+```js
+// .babelrc
+{
+  "plugins": [
+    ["@ridestore/babel-plugin-dynamic-import-node-sync", { "target": "sync" }]
+  ]
+}
+
+// index.js
+const component = import(/* sync */ './path/to/component').then(module => module.MyComponent);
+// will be replaced with
+const component = (()=>{const r=__webpack_require__(666);r.then=cb=>cb(r);return r;})().then(module => module.MyComponent);
+```
+
+Otherwise, if you initiate plugin without ``target`` option, it replaces all ```import()``` calls 
