@@ -1,3 +1,5 @@
+/* eslint-disable consistent-return */
+/* eslint-disable max-len */
 import syntax from '@babel/plugin-syntax-dynamic-import';
 
 export default function ({ template, types: t }) {
